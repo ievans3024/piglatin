@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from . import api
 from .. import db
 from ..models import Post, User
@@ -15,7 +15,7 @@ def posts_get(id):
 	post = Post.query.get(id)
 
 	if not post:
-		return make_response('Invalide post ID', 409)
+		abort(404)
 
 	return jsonify(post.serialize)
 
@@ -37,13 +37,16 @@ def posts_create():
 def posts_update(id):
 	post = Post.query.get(id)
 
+	auth = request.authorization
+	user = User.query.filter_by(email=auth.username).first()
+
 	# Post Exists
 	if not post:
-		return make_response('Invalide post ID', 409)
+		abort(404)
 
 	# User is the owner of the post
 	if post.user_id != user.id:
-		return make_response('Unauthorized', 401)
+		abort(401)
 
 	request_data = request.get_json()
 	post.original = request_data['original']
@@ -64,9 +67,12 @@ def posts_delete(id):
 
 	post = Post.query.get(id)
 
+	if not post:
+		abort(404)
+
 	# User is the owner of the post
 	if post.user_id != user.id:
-		return make_response('Unauthorized', 401)
+		abort(401)
 
 	db.session.delete(post)
 	db.session.commit()

@@ -26,7 +26,7 @@ def users_create():
 		db.session.add(user)
 		db.session.commit()
 	except:
-		return make_response('Email aready exists', 409)
+		abort(409)
 
 	token = generate_confirmation_token(user.email)
 
@@ -40,13 +40,13 @@ def confirm_email(token):
 	try:
 		email = confirm_token(token)
 	except:
-		return make_response('', 401)
+		abort(401)
 
 	user = User.query.filter_by(email=email).first()
 
 	if user.confirmed:
 		return jsonify({'status': 'already confirmed'})
-		
+
 	else:
 		user.confirm()
 		db.session.add(user)
