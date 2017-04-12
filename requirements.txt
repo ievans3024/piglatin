@@ -1,0 +1,6 @@
+Flask
+Flask-Script
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Mail
+Flask-HTTPAuth

@@ -1,0 +1,11 @@
+curl -i -H "Content-Type: application/json" -X POST -d '{"email":"cenas@cenas.com", "password": "password"}' http://localhost:5000/api/v1/users
+
+curl -i -H "Content-Type: application/json" -X POST -d '{"original":"cenas@cenas.com"}' http://localhost:5000/api/v1/posts
+
+curl -i -H "Content-Type: application/json" -X POST -d '{"email":"cenas@cenas.com", "password": "password", "original":"cenas@cenas.com"}' http://localhost:5000/api/v1/posts
+
+curl -i -u cenas@cenas.com:password  -H "Content-Type: application/json" -X POST -d '{"original":"cenas@cenas.com"}' http://localhost:5000/api/v1/posts
+
+curl -i -H "Content-Type: application/json" -X POST -d '{"email":"cenas@cenas.com", "password": "password"}' http://localhost:5000/api/v1/users
+
+curl -i -X GET http://localhost:5000/api/v1/posts
