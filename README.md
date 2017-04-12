@@ -32,3 +32,19 @@ Correctly translates contractions
 Hyphenated words are treated as two words
 Words may consist of alphabetic characters only (A-Z and a-z)
 All punctuation, numerals, symbols and whitespace are not modified
+
+## Requirements
+
+>>> pip3 install -r requirements.txt
+
+## Run server
+
+>>> python manage.py runserver
+
+## Tests
+
+>>> python -m unittest -v tests/test_app_translation.py
+
+>>> python -m unittest -v tests/test_api_users.py
+
+>>> python -m unittest -v tests/test_api_posts.py
