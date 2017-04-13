@@ -16,6 +16,11 @@ def send_mail_with_token(email, token):
     mail.send(msg)
 
 
+# MethodView subclasses are separated as below
+# because of the need for decorators on some
+# HTTP methods but not all
+
+
 class ReadPostView(MethodView):
 
     def get(self, _id=None):
