@@ -3,7 +3,7 @@ import json
 from app import create_app, db, mail
 from app.models import User, Post
 from app.api.authorization import generate_confirmation_token, confirm_token, verify_pwd
-from app.api.users import send_mail_with_token
+from app.api.resources import send_mail_with_token
 from .test_piglatin import BasicTestCase
 
 class APIUserTestCase(BasicTestCase):
