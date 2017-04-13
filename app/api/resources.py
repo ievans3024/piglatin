@@ -1,7 +1,7 @@
 from flask import jsonify, request, abort
 from flask.views import MethodView
 from flask_mail import Message
-from .. import db, mail
+from app import db, mail
 from ..models import Post, User
 from .authorization import auth, confirm_token, generate_confirmation_token, user_confirmed
 
@@ -16,12 +16,11 @@ def send_mail_with_token(email, token):
     mail.send(msg)
 
 
-class PostView(MethodView):
+class ReadPostView(MethodView):
 
     def get(self, _id=None):
-        """Get posts"""
-        # /posts and /posts/<int:_id>
         if _id is None:
+            # /posts
             posts = Post.query.all()
             return jsonify([i.serialize for i in posts])
         else:
@@ -30,8 +29,11 @@ class PostView(MethodView):
                 abort(404)
             return jsonify(post.serialize)
 
-    @auth.login_required
-    @user_confirmed
+
+class WritePostView(MethodView):
+
+    decorators = [auth.login_required, user_confirmed]
+
     def post(self):
         # /posts
         authorization = request.authorization
@@ -42,8 +44,6 @@ class PostView(MethodView):
         db.session.commit()
         return jsonify(post.serialize)
 
-    @auth.login_required
-    @user_confirmed
     def put(self, _id):
         # /posts/<int:_id>
         post = Post.query.get(id)
@@ -67,8 +67,6 @@ class PostView(MethodView):
 
         return jsonify(post.serialize)
 
-    @auth.login_required
-    @user_confirmed
     def delete(self, _id):
         # /posts/<int:_id>
         # Get the current user
@@ -90,9 +88,10 @@ class PostView(MethodView):
         return jsonify({'result': True})
 
 
-class UserView(MethodView):
+class UserConfirmView(MethodView):
 
-    @auth.login_required
+    decorators = [auth.login_required]
+
     def get(self, token):
         # /confirm/token
         try:
@@ -110,6 +109,9 @@ class UserView(MethodView):
                 db.session.commit()
 
             return jsonify(user.serialize)
+
+
+class UserCreateView(MethodView):
 
     def post(self):
         # /users
